@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, InputType, Arg, Field } from "type-graphql"
+import { Resolver, Query, Mutation, InputType, Arg, Field, Subscription, Ctx, PubSub, PubSubEngine, Root } from "type-graphql"
 import Category from "./Category"
 import CategorySchema from '../../model/CategorySchema'
 
@@ -23,9 +23,23 @@ class CategoryResolver {
     }
 
     @Mutation(() => Category)
-    async createCategory(@Arg('categoryInput') categoryInput: CategoryInput) {
+    async createCategory(@Arg('categoryInput') categoryInput: CategoryInput, @PubSub() pubsub: PubSubEngine) {
         const category = await CategorySchema.create<CategoryInput>(categoryInput)
+        await pubsub.publish("CATEGORY", category)
         return category
+    }
+
+    @Subscription(() => Category, {
+        topics: "CATEGORY"
+    })
+    newCategory(@Root() category: any) {
+        console.log(category._doc)
+        
+        return {
+            description: 'teste',
+            name: 'testetesteteste',
+            _id: 'testetesteteste'
+        }
     }
 
 }
