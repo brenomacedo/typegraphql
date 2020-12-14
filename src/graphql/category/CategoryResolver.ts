@@ -30,15 +30,18 @@ class CategoryResolver {
     }
 
     @Subscription(() => Category, {
-        topics: "CATEGORY"
+        topics: "CATEGORY",
+        filter: ({ payload, args }) => {
+            return (payload._doc.name !== 'entrar')
+        }
     })
     newCategory(@Root() category: any) {
-        console.log(category._doc)
+        const { name, description, _id } = category._doc
         
         return {
-            description: 'teste',
-            name: 'testetesteteste',
-            _id: 'testetesteteste'
+            description,
+            name,
+            _id
         }
     }
 
