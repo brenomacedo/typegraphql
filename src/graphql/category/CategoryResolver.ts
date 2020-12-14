@@ -24,7 +24,7 @@ class CategoryResolver {
 
     @Mutation(() => Category)
     async createCategory(@Arg('categoryInput') categoryInput: CategoryInput) {
-        const category = await CategorySchema.create(categoryInput as any)
+        const category = await CategorySchema.create<CategoryInput>(categoryInput)
         return category
     }
 

@@ -28,7 +28,7 @@ class VideoResolver {
 
     @Mutation(() => Video)
     async createVideos(@Arg('videoInput') videoInput: VideoInput) {
-        const video = await VideoSchema.create(videoInput as any)
+        const video = await VideoSchema.create<VideoInput>(videoInput)
         return video
     }
 
